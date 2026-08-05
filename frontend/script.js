@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://esp-community.vercel.app';
 
 // --- 3-SECOND LOADING SCREEN & SMOOTH SCROLL ---
 window.addEventListener('load', () => {
