@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "mysql-2fb31332-mubeenafaq-06cf.d.aivencloud.com",
+            "port": 13682,
+            "driver": "MySQL",
+            "name": "ESP Cloud DB",
+            "username": "avnadmin",
+            "database": "defaultdb",
+            "askForPassword": true
+        }
+    ]
+}
