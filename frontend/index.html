@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ES&P Community</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==================== -->
+    <!-- 3-SECOND LOADING SCREEN -->
+    <!-- ==================== -->
+    <div id="loader">
+        <div class="loader-content">
+            <img src="logo.png" alt="ESP Logo" class="loader-logo"> 
+            <h1><span>ES</span>&P</h1>
+            <div class="spinner"></div>
+            <p>Loading your experience...</p>
+        </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- MAIN WEBSITE CONTENT -->
+    <!-- ==================== -->
+    <div id="main-site" style="display: none;">
+        <div class="sidebar">
+            <div class="logo-area">
+                <img src="logo.png" alt="ESP Logo"> 
+                <h1><span>ES</span>&P</h1>
+            </div>
+            <ul class="nav-links">
+                <li class="active" onclick="showSection('home')">Home</li>
+                <li onclick="showSection('services')">Services</li>
+                <li onclick="showSection('reviews')">Reviews</li>
+                <li onclick="showSection('myorders')">My Orders</li>
+            </ul>
+        </div>
+
+        <div class="main-content" id="home">
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <h1>Expert Academic Help, <br><span style="color: var(--accent-red);">Delivered with Care</span></h1>
+                <p>Get high-quality assignments, reports, and project support from ES&P Community. Fast turnaround and 24/7 support.</p>
+            </div>
+
+            <!-- ABOUT US SECTION (NEW) -->
+            <div class="about-section">
+                <h2>About ES&P Community</h2>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>🎯 Our Mission</h3>
+                        <p>To provide students with reliable, high-quality academic support. We bridge the gap between complex coursework and student success through expert guidance.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>⚡ Why Choose Us?</h3>
+                        <p>We offer transparent pricing, dedicated 1-on-1 progress tracking via live chat, and a strict commitment to deadlines. Your academic growth is our priority.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>🔒 Your Trust</h3>
+                        <p>Secure payments via Easypaisa & UPaise, complete privacy on your data, and a satisfaction-focused workflow that keeps you updated every step of the way.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Form -->
+            <div class="form-card" id="orderForm">
+                <h2>Request a Service</h2>
+                <p>Fill out this form to start your assignment. We will contact you via chat.</p>
+                <div class="form-group">
+                    <label>Your Full Name</label>
+                    <input type="text" id="customerName" placeholder="e.g. Ahmed Khan" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Phone/WhatsApp Number</label>
+                    <input type="text" id="customerPhone" placeholder="e.g. 03XX-XXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label>Select Service Tier</label>
+                    <select id="serviceType">
+                        <option value="Basic">Basic (Rs. 300 - 500)</option>
+                        <option value="Standard">Standard (Rs. 600 - 900)</option>
+                        <option value="Advanced">Advanced (Rs. 1,000 - 1,500)</option>
+                        <option value="Premium">Premium (Rs. 1,600 - 2,200)</option>
+                        <option value="Group Project">Group Project (Rs. 2,500 - 3,500)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assignment Details</label>
+                    <textarea id="serviceDetails" rows="3" placeholder="Write your specific requirements here..."></textarea>
+                </div>
+                <button class="btn" onclick="submitOrder()" style="width: 100%;">Submit Request</button>
+            </div>
+        </div>
+
+        <div class="main-content" id="services" style="display:none;">
+            <h2>Our Service Tiers & Pricing</h2>
+            <div class="academy-list" id="serviceList"></div>
+        </div>
+
+        <div class="main-content" id="reviews" style="display:none;">
+            <h2>Student Reviews & Ratings</h2>
+            <div class="form-card" style="max-width: 100%; margin-bottom: 20px;">
+                <h3>Leave a Review</h3>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="reviewerName" placeholder="Your name...">
+                </div>
+                <div class="form-group">
+                    <label>Rating (1 to 5 Stars)</label>
+                    <select id="reviewRating">
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4)</option>
+                        <option value="3">⭐⭐⭐ (3)</option>
+                        <option value="2">⭐⭐ (2)</option>
+                        <option value="1">⭐ (1)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Feedback</label>
+                    <textarea id="reviewComment" rows="2" placeholder="Tell us about your experience..."></textarea>
+                </div>
+                <button class="btn" onclick="submitReview()" style="width: 100%;">Submit Review</button>
+            </div>
+            <div id="reviewsList" style="width: 100%; max-width: 1000px;">
+                <p>Loading reviews...</p>
+            </div>
+        </div>
+
+        <div class="main-content" id="myorders" style="display:none;">
+            <h2>My Order History</h2>
+            <div id="orderHistory">You haven't placed any orders yet.</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

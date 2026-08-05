@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES&P Admin Dashboard</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin specific tweaks to utilize the new responsive CSS */
+        .admin-layout { max-width: 1200px !important; margin: 0 auto; width: 100%; padding-bottom: 40px;}
+        .admin-layout h1 { margin-bottom: 30px; font-size: 2rem;}
+        .admin-card { background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .admin-card h2 { font-size: 1.3rem; margin-bottom: 15px; color: white; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
+        .pay-item { background: var(--bg-input); padding: 15px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+        .btn-green { background: #2f855a; }
+        .btn-green:hover { background: #276749; }
+        #adminChat { height: 300px; overflow-y: auto; background: var(--bg-dark); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color);}
+        .chat-input { display: flex; gap: 10px; width: 100%; }
+        .chat-input input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: white; outline: none;}
+        .chat-input input:focus { border-color: var(--accent-red); }
+        
+        /* Responsive Admin */
+        @media (max-width: 768px) {
+            .admin-layout { padding: 10px; }
+            .pay-item { flex-direction: column; align-items: flex-start; }
+            .btn { width: 100%; margin-top: 5px; text-align: center;}
+            .chat-input { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING SCREEN FOR ADMIN -->
+    <div id="loader">
+        <div class="loader-content">
+            <img src="logo.png" alt="ESP Logo" class="loader-logo"> 
+            <h1><span>ES</span>&P</h1>
+            <div class="spinner"></div>
+            <p>Loading Admin Panel...</p>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN CONTENT -->
+    <div id="main-site" style="display: none; width: 100%;">
+        <div class="admin-layout">
+            <h1>ES&P Admin Panel</h1>
+            
+            <div class="admin-card">
+                <h2>Pending Payments</h2>
+                <div id="paymentList">Loading...</div>
+            </div>
+
+            <div class="admin-card">
+                <h2>Live Chat with Student</h2>
+                <div id="adminChat"></div>
+                <div class="chat-input">
+                    <input type="text" id="adminMsg" placeholder="Reply to student...">
+                    <button class="btn btn-green" onclick="adminSendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000';
+
+        // --- 3-SECOND LOADING SCREEN FOR ADMIN ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('main-site').style.display = 'block';
+                }, 500);
+            }, 3000);
+        });
+
+        // Load Payments
+        async function loadPayments() {
+            const res = await fetch(`${API}/api/admin/payments`);
+            const data = await res.json();
+            const list = document.getElementById('paymentList');
+            if(data.length === 0) return list.innerHTML = '<p style="color:var(--text-grey);">No pending payments.</p>';
+            list.innerHTML = data.map(p => `
+                <div class="pay-item">
+                    <div><strong>${p.username}</strong> - Txn: ${p.transaction_id} (Rs. ${p.amount})</div>
+                    <button class="btn btn-green" onclick="verifyPayment(${p.id})">Verify Payment</button>
+                </div>
+            `).join('');
+        }
+        async function verifyPayment(id) {
+            await fetch(`${API}/api/admin/verify-payment`, {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ payment_id: id })
+            });
+            loadPayments();
+        }
+        loadPayments();
+
+        // Admin Chat
+        async function adminSendMessage() {
+            const input = document.getElementById('adminMsg');
+            if(!input.value) return;
+            await fetch(`${API}/api/admin/send-message`, {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ assignment_id: 104, message: input.value })
+            });
+            input.value = '';
+            loadAdminChat();
+        }
+        async function loadAdminChat() {
+            const res = await fetch(`${API}/api/get-messages/104`);
+            const msgs = await res.json();
+            const div = document.getElementById('adminChat');
+            if(msgs.length === 0) {
+                div.innerHTML = '<p style="color:var(--text-grey); text-align:center;">No messages yet. Wait for a student to order.</p>';
+                return;
+            }
+            div.innerHTML = msgs.map(m => `
+                <div style="text-align:${m.is_admin ? 'left' : 'right'}; margin-bottom: 12px;">
+                    <strong style="color:${m.is_admin ? 'var(--accent-red)' : 'white'};">
+                        ${m.is_admin ? 'Admin' : 'Student'}:
+                    </strong> 
+                    <span style="color:var(--text-white);">${m.message}</span>
+                    ${m.file_url ? `<br><a href="${m.file_url}" target="_blank" style="color:#63b3ed; text-decoration:underline;">📎 View Uploaded File</a>` : ''}
+                </div>
+            `).join('');
+            div.scrollTop = div.scrollHeight;
+        }
+        setInterval(loadAdminChat, 3000);
+        loadAdminChat();
+    </script>
+</body>
+</html>
