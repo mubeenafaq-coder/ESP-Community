@@ -1,4 +1,4 @@
-const API_URL = 'https://esp-community.vercel.app';
+const API_URL = 'https://esp-community-163v.vercel.app/backend';
 
 // --- 3-SECOND LOADING SCREEN & SMOOTH SCROLL ---
 window.addEventListener('load', () => {
