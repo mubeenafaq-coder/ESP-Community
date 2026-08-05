@@ -7,7 +7,14 @@ const path = require('path');
 const multer = require('multer');
 
 const app = express();
-app.use(cors());
+// Change the old "app.use(cors());" to this:
+const corsOptions = {
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle pre-flight requests
 app.use(bodyParser.json());
 
 // --- FILE UPLOAD SETUP ---
