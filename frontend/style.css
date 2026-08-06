@@ -110,70 +110,80 @@ body { background-color: var(--bg-dark); color: var(--text-white); display: flex
 @media (max-width: 992px) {
     .about-grid { grid-template-columns: repeat(2, 1fr); }
 }
-/* MOBILE RESPONSIVE RULES (Overrides for phones) */
+/* MOBILE RESPONSIVE RULES */
 @media (max-width: 768px) {
+    /* Reset the body specifically for mobile */
     body { 
-        flex-direction: column; 
-        overflow-y: auto; 
-        height: auto; 
-        display: block; /* Changed from flex to block */
+        flex-direction: column !important; 
+        overflow-y: auto !important; 
+        height: auto !important; 
+        min-height: 100vh !important;
+        display: block !important; 
+        background-color: var(--bg-dark) !important;
     }
 
+    /* Make the sidebar a top nav bar */
     .sidebar { 
-        width: 100%; 
-        padding: 15px 20px; 
-        border-right: none; 
-        border-bottom: 1px solid var(--border-color); 
-        flex-direction: row; 
-        justify-content: space-between; 
-        align-items: center;
-        height: auto;
-        position: sticky;
-        top: 0;
-        z-index: 100;
+        width: 100% !important; 
+        padding: 15px 20px !important; 
+        border-right: none !important; 
+        border-bottom: 1px solid var(--border-color) !important; 
+        flex-direction: row !important; 
+        justify-content: space-between !important; 
+        align-items: center !important;
+        height: auto !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 100 !important;
+        background-color: var(--bg-card) !important;
     }
 
-    .logo-area { margin-bottom: 0; }
-    .logo-area img { width: 35px; height: 35px; }
-    .logo-area h1 { font-size: 1.1rem; }
+    .logo-area { margin-bottom: 0 !important; }
+    .logo-area img { width: 35px !important; height: 35px !important; }
+    .logo-area h1 { font-size: 1.1rem !important; }
 
     .nav-links { 
-        flex-direction: row; 
-        flex-wrap: wrap; 
-        gap: 5px; 
-        justify-content: flex-end;
-        background: transparent;
-        padding: 0;
+        flex-direction: row !important; 
+        flex-wrap: wrap !important; 
+        gap: 5px !important; 
+        justify-content: flex-end !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     .nav-links li { 
-        flex: 0 1 auto; 
-        text-align: center; 
-        font-size: 0.75rem; 
-        padding: 6px 10px; 
-        border-radius: 4px;
+        flex: 0 1 auto !important; 
+        text-align: center !important; 
+        font-size: 0.75rem !important; 
+        padding: 6px 10px !important; 
+        border-radius: 4px !important;
+        color: var(--text-grey) !important;
     }
 
+    /* FORCE THE CONTENT TO BE FULLY VISIBLE */
     .main-content { 
-        height: auto; 
-        padding: 15px; 
-        align-items: stretch; 
-        display: flex; 
-        flex-direction: column;
-        width: 100%;
+        height: auto !important; 
+        padding: 15px !important; 
+        align-items: stretch !important; 
+        display: flex !important; 
+        flex-direction: column !important;
+        width: 100% !important;
+        background-color: var(--bg-dark) !important;
     }
 
-    /* Force the content to be visible */
+    /* Force all cards and sections to show up at full width */
     .main-content > * {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 0 15px 0; /* Add bottom margin between blocks */
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 15px 0 !important; 
     }
 
-    .hero-banner, .form-card, .about-section { padding: 20px; }
-    .about-grid { grid-template-columns: 1fr; }
-    .academy-list { grid-template-columns: 1fr; }
-    
-    /* Ensure the form and hero show up */
-    #home { display: flex !important; }
+    .hero-banner, .form-card, .about-section { 
+        padding: 20px !important; 
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .about-grid { grid-template-columns: 1fr !important; }
+    .academy-list { grid-template-columns: 1fr !important; }
 }

@@ -68,30 +68,6 @@ async function submitOrder() {
     }
 }
 
-// --- LOAD SERVICES (WITH SAFETY) ---
-async function loadServices() {
-    const list = document.getElementById('serviceList');
-    if(!list) return;
-    try {
-        const res = await fetch(`${API_URL}/api/services`);
-        if(!res.ok) throw new Error("Backend sleeping");
-        const data = await res.json();
-        list.innerHTML = data.map(s => `
-            <div class="academy-card">
-                <div class="tier-header">${s.name}</div>
-                <p><strong>Scope:</strong> ${s.scope}</p>
-                <div class="price">Rs. ${s.price}</div>
-                <p><strong>Delivery:</strong> ${s.delivery}</p>
-                <p><strong>Urgent:</strong> ${s.urgent}</p>
-                <p style="font-size:0.8rem; color:#a0aec0; margin-top:5px;"><strong>Best For:</strong> ${s.best_for}</p>
-            </div>
-        `).join('');
-    } catch (e) { 
-        // If it fails, just show a nice message instead of crashing
-        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Loading services... (Server waking up)</p>'; 
-    }
-}
-
 // --- SUBMIT REVIEW ---
 async function submitReview() {
     const name = document.getElementById('reviewerName').value;
@@ -110,8 +86,33 @@ async function submitReview() {
         loadReviews();
     } catch(e) { alert("Review saved locally. We will sync it to the server shortly!"); }
 }
+// --- LOAD SERVICES (WITH AUTO-RETRY) ---
+async function loadServices() {
+    const list = document.getElementById('serviceList');
+    if(!list) return;
+    try {
+        const res = await fetch(`${API_URL}/api/services`);
+        if(!res.ok) throw new Error("Backend sleeping");
+        const data = await res.json();
+        list.innerHTML = data.map(s => `
+            <div class="academy-card">
+                <div class="tier-header">${s.name}</div>
+                <p><strong>Scope:</strong> ${s.scope}</p>
+                <div class="price">Rs. ${s.price}</div>
+                <p><strong>Delivery:</strong> ${s.delivery}</p>
+                <p><strong>Urgent:</strong> ${s.urgent}</p>
+                <p style="font-size:0.8rem; color:#a0aec0; margin-top:5px;"><strong>Best For:</strong> ${s.best_for}</p>
+            </div>
+        `).join('');
+    } catch (e) { 
+        // Show a retry message instead of crashing
+        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Server waking up... Retrying in 5 seconds</p>';
+        // Retry automatically after 5 seconds
+        setTimeout(loadServices, 5000);
+    }
+}
 
-// --- LOAD REVIEWS (WITH SAFETY) ---
+// --- LOAD REVIEWS (WITH AUTO-RETRY) ---
 async function loadReviews() {
     const div = document.getElementById('reviewsList');
     if(!div) return;
@@ -131,6 +132,8 @@ async function loadReviews() {
             </div>
         `).join('');
     } catch (e) { 
-        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up...</p>'; 
+        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up... Retrying in 5 seconds</p>';
+        // Retry automatically after 5 seconds
+        setTimeout(loadReviews, 5000);
     }
 }
