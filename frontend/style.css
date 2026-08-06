@@ -31,9 +31,16 @@ body { background-color: var(--bg-dark); color: var(--text-white); display: flex
 /* Wrapper to handle sizing beautifully */
 .main-content > * {
     width: 100%;
-    max-width: 1500px; /* Keeps it readable on huge screens */
-    padding: 0 40px; /* Adds 40px gap on the left and right */
-    margin: 0 auto;   /* THIS CENTERS EVERYTHING IN THE MIDDLE */
+    max-width: 1500px;
+    padding: 0 40px; /* Default desktop padding */
+    margin: 0 auto;
+}
+
+/* REMOVE padding EXCLUSIVELY for small mobile screens */
+@media (max-width: 480px) {
+    .main-content > * {
+        padding: 0 15px !important; /* Drastically reduce padding for phones */
+    }
 }
 
 .main-content h2 { margin-bottom: 20px; color: var(--text-white); }
