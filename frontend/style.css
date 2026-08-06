@@ -110,15 +110,70 @@ body { background-color: var(--bg-dark); color: var(--text-white); display: flex
 @media (max-width: 992px) {
     .about-grid { grid-template-columns: repeat(2, 1fr); }
 }
+/* MOBILE RESPONSIVE RULES (Overrides for phones) */
 @media (max-width: 768px) {
-    body { flex-direction: column; overflow-y: auto; height: auto; }
-    .sidebar { width: 100%; padding: 15px; border-right: none; border-bottom: 1px solid var(--border-color); flex-direction: row; justify-content: space-between; align-items: center;}
+    body { 
+        flex-direction: column; 
+        overflow-y: auto; 
+        height: auto; 
+        display: block; /* Changed from flex to block */
+    }
+
+    .sidebar { 
+        width: 100%; 
+        padding: 15px 20px; 
+        border-right: none; 
+        border-bottom: 1px solid var(--border-color); 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center;
+        height: auto;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
     .logo-area { margin-bottom: 0; }
-    .nav-links { flex-direction: row; flex-wrap: wrap; gap: 5px; justify-content: flex-end;}
-    .nav-links li { flex: 0 1 auto; text-align: center; font-size: 0.9rem; padding: 8px 12px; }
-    .main-content { height: auto; padding: 15px; align-items: stretch; }
-    .form-card, .hero-banner, .about-section { padding: 20px; }
+    .logo-area img { width: 35px; height: 35px; }
+    .logo-area h1 { font-size: 1.1rem; }
+
+    .nav-links { 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        gap: 5px; 
+        justify-content: flex-end;
+        background: transparent;
+        padding: 0;
+    }
+
+    .nav-links li { 
+        flex: 0 1 auto; 
+        text-align: center; 
+        font-size: 0.75rem; 
+        padding: 6px 10px; 
+        border-radius: 4px;
+    }
+
+    .main-content { 
+        height: auto; 
+        padding: 15px; 
+        align-items: stretch; 
+        display: flex; 
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Force the content to be visible */
+    .main-content > * {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 15px 0; /* Add bottom margin between blocks */
+    }
+
+    .hero-banner, .form-card, .about-section { padding: 20px; }
     .about-grid { grid-template-columns: 1fr; }
     .academy-list { grid-template-columns: 1fr; }
-    .message { max-width: 95%; }
+    
+    /* Ensure the form and hero show up */
+    #home { display: flex !important; }
 }
