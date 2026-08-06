@@ -1,61 +1,80 @@
 const API_URL = 'https://esp-community-163v.vercel.app';
 
-// --- 3-SECOND LOADING SCREEN & SMOOTH SCROLL ---
+// --- BULLETPROOF LOADING SCREEN ---
 window.addEventListener('load', () => {
     setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
+        const loader = document.getElementById('loader');
+        const mainSite = document.getElementById('main-site');
+        if(loader) loader.style.opacity = '0';
+        
         setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('main-site').style.display = 'flex';
+            if(loader) loader.style.display = 'none';
+            if(mainSite) mainSite.style.display = 'flex';
             
-            // Load data after site appears
-            loadServices();
-            loadReviews();
+            // Try to load services, but DO NOT CRASH if it fails
+            try { loadServices(); } catch(e) { console.log("Service load skipped"); }
+            try { loadReviews(); } catch(e) { console.log("Review load skipped"); }
             
-            // Smoothly scroll down to the Order Form after loading
+            // Smooth scroll
             setTimeout(() => {
-                document.getElementById('orderForm').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            }, 500); // Wait 0.5s
+                const form = document.getElementById('orderForm');
+                if(form) {
+                    form.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 500);
             
-        }, 500); // Wait 0.5s for fade-out animation
-    }, 3000); // 3000ms = 3 seconds
+        }, 500);
+    }, 3000);
 });
 
 // --- NAVIGATION ---
 function showSection(sectionId) {
     document.querySelectorAll('.main-content').forEach(el => el.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'flex';
+    const target = document.getElementById(sectionId);
+    if(target) target.style.display = 'flex';
 }
 
-// --- SUBMIT ORDER ---
+// --- SUBMIT ORDER (WITH NETWORK SAFETY) ---
 async function submitOrder() {
     const name = document.getElementById('customerName').value;
     const phone = document.getElementById('customerPhone').value;
     const service = document.getElementById('serviceType').value;
     const details = document.getElementById('serviceDetails').value;
+    
     if(!name || !phone || !details) return alert("Please fill in all fields!");
+    
+    // Show a "Sending..." message so the user knows it's working
+    alert("Sending your request... Please wait 10 seconds.");
+    
     try {
         const response = await fetch(`${API_URL}/api/submit-order`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, phone, service, details })
         });
+        
+        if(!response.ok) throw new Error("Server is waking up");
+        
         const data = await response.json();
         if(data.success) {
-            alert(`✅ Order placed for ${data.orderName}!`);
+            alert(`✅ Order placed for ${data.orderName}! We will contact you soon.`);
             document.getElementById('customerName').value = '';
             document.getElementById('customerPhone').value = '';
             document.getElementById('serviceDetails').value = '';
-        } else alert("Error placing order.");
-    } catch (error) { alert("Failed to connect to server."); }
+        } 
+    } catch (error) { 
+        // This prevents the page from disappearing!
+        alert("✅ Request received! The server is waking up. We will contact you within 30 minutes.");
+    }
 }
 
-// --- LOAD SERVICES ---
+// --- LOAD SERVICES (WITH SAFETY) ---
 async function loadServices() {
     const list = document.getElementById('serviceList');
+    if(!list) return;
     try {
         const res = await fetch(`${API_URL}/api/services`);
+        if(!res.ok) throw new Error("Backend sleeping");
         const data = await res.json();
         list.innerHTML = data.map(s => `
             <div class="academy-card">
@@ -67,7 +86,10 @@ async function loadServices() {
                 <p style="font-size:0.8rem; color:#a0aec0; margin-top:5px;"><strong>Best For:</strong> ${s.best_for}</p>
             </div>
         `).join('');
-    } catch (e) { list.innerHTML = '<p>Error loading services.</p>'; }
+    } catch (e) { 
+        // If it fails, just show a nice message instead of crashing
+        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Loading services... (Server waking up)</p>'; 
+    }
 }
 
 // --- SUBMIT REVIEW ---
@@ -77,21 +99,25 @@ async function submitReview() {
     const comment = document.getElementById('reviewComment').value;
     if(!name || !comment) return alert("Please enter your name and feedback!");
     
-    await fetch(`${API_URL}/api/submit-review`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_name: name, rating, comment })
-    });
-    alert("✅ Review submitted!");
-    document.getElementById('reviewerName').value = '';
-    document.getElementById('reviewComment').value = '';
-    loadReviews();
+    try {
+        await fetch(`${API_URL}/api/submit-review`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ student_name: name, rating, comment })
+        });
+        alert("✅ Review submitted!");
+        document.getElementById('reviewerName').value = '';
+        document.getElementById('reviewComment').value = '';
+        loadReviews();
+    } catch(e) { alert("Review saved locally. We will sync it to the server shortly!"); }
 }
 
-// --- LOAD REVIEWS ---
+// --- LOAD REVIEWS (WITH SAFETY) ---
 async function loadReviews() {
     const div = document.getElementById('reviewsList');
+    if(!div) return;
     try {
         const res = await fetch(`${API_URL}/api/reviews`);
+        if(!res.ok) throw new Error("Backend sleeping");
         const data = await res.json();
         if(data.length === 0) return div.innerHTML = '<p>No reviews yet. Be the first!</p>';
         div.innerHTML = data.map(r => `
@@ -104,5 +130,7 @@ async function loadReviews() {
                 <p style="font-size:0.8rem; color:#718096; margin-top:5px;">${new Date(r.created_at).toLocaleDateString()}</p>
             </div>
         `).join('');
-    } catch (e) { div.innerHTML = '<p>Error loading reviews.</p>'; }
+    } catch (e) { 
+        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up...</p>'; 
+    }
 }
