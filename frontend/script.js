@@ -86,7 +86,7 @@ async function submitReview() {
         loadReviews();
     } catch(e) { alert("Review saved locally. We will sync it to the server shortly!"); }
 }
-// --- LOAD SERVICES (WITH AUTO-RETRY) ---
+// --- LOAD SERVICES ---
 async function loadServices() {
     const list = document.getElementById('serviceList');
     if(!list) return;
@@ -105,14 +105,12 @@ async function loadServices() {
             </div>
         `).join('');
     } catch (e) { 
-        // Show a retry message instead of crashing
-        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Server waking up... Retrying in 5 seconds</p>';
-        // Retry automatically after 5 seconds
-        setTimeout(loadServices, 5000);
+        // JUST SHOW THE MESSAGE. DO NOT RETRY INFINITELY.
+        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Server waking up... Please wait 15 seconds and refresh.</p>';
     }
 }
 
-// --- LOAD REVIEWS (WITH AUTO-RETRY) ---
+// --- LOAD REVIEWS ---
 async function loadReviews() {
     const div = document.getElementById('reviewsList');
     if(!div) return;
@@ -132,8 +130,7 @@ async function loadReviews() {
             </div>
         `).join('');
     } catch (e) { 
-        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up... Retrying in 5 seconds</p>';
-        // Retry automatically after 5 seconds
-        setTimeout(loadReviews, 5000);
+        // JUST SHOW THE MESSAGE. DO NOT RETRY INFINITELY.
+        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up... Please wait 15 seconds and refresh.</p>';
     }
 }
