@@ -189,23 +189,14 @@ body { background-color: var(--bg-dark); color: var(--text-white); display: flex
         flex-direction: column !important;
     }
 
-    ..hero-banner, .form-card, .about-section { 
-    padding: 20px !important; 
-    width: 100% !important; 
-    display: block !important; 
-    background-color: #141e3a !important; 
-    border-radius: 12px !important; 
-}
+    .hero-banner, .form-card, .about-section { 
+        padding: 20px !important; 
+        width: 100% !important;
+        display: block !important;
+        background-color: #141e3a !important;
+        border-radius: 12px !important;
+    }
 
-.about-grid { 
-    display: grid !important; 
-    grid-template-columns: 1fr !important; 
-    gap: 15px !important; 
-}
-
-.academy-list { 
-    display: grid !important; 
-    grid-template-columns: 1fr !important; 
-    gap: 15px !important; 
-}
+    .about-grid { display: grid !important; grid-template-columns: 1fr !important; }
+    .academy-list { display: grid !important; grid-template-columns: 1fr !important; }
 }

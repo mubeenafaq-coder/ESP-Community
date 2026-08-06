@@ -86,51 +86,82 @@ async function submitReview() {
         loadReviews();
     } catch(e) { alert("Review saved locally. We will sync it to the server shortly!"); }
 }
-// --- LOAD SERVICES ---
+// --- LOAD SERVICES (FULLY AUTOMATED WAKE-UP) ---
 async function loadServices() {
     const list = document.getElementById('serviceList');
     if(!list) return;
-    try {
-        const res = await fetch(`${API_URL}/api/services`);
-        if(!res.ok) throw new Error("Backend sleeping");
-        const data = await res.json();
-        list.innerHTML = data.map(s => `
-            <div class="academy-card">
-                <div class="tier-header">${s.name}</div>
-                <p><strong>Scope:</strong> ${s.scope}</p>
-                <div class="price">Rs. ${s.price}</div>
-                <p><strong>Delivery:</strong> ${s.delivery}</p>
-                <p><strong>Urgent:</strong> ${s.urgent}</p>
-                <p style="font-size:0.8rem; color:#a0aec0; margin-top:5px;"><strong>Best For:</strong> ${s.best_for}</p>
-            </div>
-        `).join('');
-    } catch (e) { 
-        // JUST SHOW THE MESSAGE. DO NOT RETRY INFINITELY.
-        list.innerHTML = '<p style="color: var(--text-grey); text-align:center;">⏳ Server waking up... Please wait 15 seconds and refresh.</p>';
-    }
-}
 
-// --- LOAD REVIEWS ---
+    // Show the loading message
+    list.innerHTML = '<p style="color: var(--text-grey); text-align:center; padding: 20px;">⏳ Connecting to server... Please wait.</p>';
+
+    // This function will try to fetch data
+    async function attemptFetch() {
+        try {
+            const res = await fetch(`${API_URL}/api/services`);
+            if(!res.ok) throw new Error("Server not ready yet");
+            
+            const data = await res.json();
+            
+            // If data comes back, inject it and clear the timer!
+            list.innerHTML = data.map(s => `
+                <div class="academy-card">
+                    <div class="tier-header">${s.name}</div>
+                    <p><strong>Scope:</strong> ${s.scope}</p>
+                    <div class="price">Rs. ${s.price}</div>
+                    <p><strong>Delivery:</strong> ${s.delivery}</p>
+                    <p><strong>Urgent:</strong> ${s.urgent}</p>
+                    <p style="font-size:0.8rem; color:#a0aec0; margin-top:5px;"><strong>Best For:</strong> ${s.best_for}</p>
+                </div>
+            `).join('');
+            
+            // Clear the interval so it stops pinging the server
+            clearInterval(retryInterval);
+            
+        } catch (e) {
+            // If it fails, just wait. Do NOT change the text.
+            console.log("Server still sleeping...");
+        }
+    }
+
+    // Try immediately
+    attemptFetch();
+
+    // Then check again every 4 seconds automatically until it wakes up
+    const retryInterval = setInterval(attemptFetch, 4000);
+}
+// --- LOAD REVIEWS (FULLY AUTOMATED WAKE-UP) ---
 async function loadReviews() {
     const div = document.getElementById('reviewsList');
     if(!div) return;
-    try {
-        const res = await fetch(`${API_URL}/api/reviews`);
-        if(!res.ok) throw new Error("Backend sleeping");
-        const data = await res.json();
-        if(data.length === 0) return div.innerHTML = '<p>No reviews yet. Be the first!</p>';
-        div.innerHTML = data.map(r => `
-            <div class="review-card">
-                <div style="display:flex; justify-content:space-between;">
-                    <strong>${r.student_name}</strong>
-                    <span style="color: #f59e0b;">${'⭐'.repeat(r.rating)}</span>
-                </div>
-                <p>${r.comment}</p>
-                <p style="font-size:0.8rem; color:#718096; margin-top:5px;">${new Date(r.created_at).toLocaleDateString()}</p>
-            </div>
-        `).join('');
-    } catch (e) { 
-        // JUST SHOW THE MESSAGE. DO NOT RETRY INFINITELY.
-        div.innerHTML = '<p style="color: var(--text-grey);">💬 Server waking up... Please wait 15 seconds and refresh.</p>';
+
+    div.innerHTML = '<p style="color: var(--text-grey); padding: 20px;">⏳ Loading reviews...</p>';
+
+    async function attemptFetchReviews() {
+        try {
+            const res = await fetch(`${API_URL}/api/reviews`);
+            if(!res.ok) throw new Error("Server not ready yet");
+            const data = await res.json();
+
+            if(data.length === 0) {
+                div.innerHTML = '<p>No reviews yet. Be the first!</p>';
+            } else {
+                div.innerHTML = data.map(r => `
+                    <div class="review-card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <strong>${r.student_name}</strong>
+                            <span style="color: #f59e0b;">${'⭐'.repeat(r.rating)}</span>
+                        </div>
+                        <p>${r.comment}</p>
+                        <p style="font-size:0.8rem; color:#718096; margin-top:5px;">${new Date(r.created_at).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            }
+            clearInterval(reviewInterval);
+        } catch (e) {
+            console.log("Reviews server still sleeping...");
+        }
     }
+
+    attemptFetchReviews();
+    const reviewInterval = setInterval(attemptFetchReviews, 4000);
 }
