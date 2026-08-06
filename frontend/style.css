@@ -133,75 +133,62 @@ body {
 @media (max-width: 992px) {
     .about-grid { grid-template-columns: repeat(2, 1fr); }
 }
-/* MOBILE RESPONSIVE RULES - ULTRA FORCE */
+/* MOBILE RESPONSIVE RULES (Phones only) */
 @media (max-width: 768px) {
-    body { 
-        flex-direction: column !important; 
-        overflow-y: auto !important; 
-        height: auto !important; 
-        min-height: 100vh !important;
-        display: block !important; 
-        background-color: #0a1128 !important; /* Hardcoded color */
-    }
+    /* Reset Body for Mobile */
+    body { display: block !important; height: auto !important; }
 
+    /* Turn Sidebar into a Horizontal Flex Bar */
     .sidebar { 
         width: 100% !important; 
         max-width: 100% !important;
-        padding: 15px 15px !important; 
-        border-right: none !important; 
-        border-bottom: 1px solid #2d3748 !important; 
+        padding: 12px 15px !important; 
         flex-direction: row !important; 
         justify-content: space-between !important; 
         align-items: center !important;
-        height: auto !important;
         position: sticky !important;
         top: 0 !important;
         z-index: 100 !important;
-        background-color: #141e3a !important;
-        display: flex !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color) !important;
     }
-.logo-area { margin-bottom: 0 !important; display: flex; align-items: center; gap: 10px; }
-.logo-area img { width: 35px; height: 35px; }
-.logo-area h1 { font-size: 1.1rem; }
 
-.nav-links { 
-    display: flex; 
-    flex-direction: row; 
-    flex-wrap: wrap; 
-    gap: 5px; 
-    margin: 0; 
-    padding: 0;
-    list-style: none;
-}
-.nav-links li { 
-    padding: 6px 12px; 
-    font-size: 0.8rem; 
-    cursor: pointer; 
-    color: var(--text-grey); 
-    border-radius: 4px;
-    transition: 0.3s;
-}
-.nav-links li:hover, .nav-links li.active { color: var(--accent-red); background: rgba(212, 45, 45, 0.1); }
+    .logo-area { margin-bottom: 0 !important; }
+    .logo-area img { width: 30px !important; height: 30px !important; }
+    .logo-area h1 { font-size: 1rem !important; }
 
-    /* FORCE THE CONTENT TO BE FULLY VISIBLE AND FIXED */
+    .nav-links { 
+        flex-direction: row !important; 
+        flex-wrap: wrap !important; 
+        gap: 5px !important; 
+        justify-content: flex-end !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .nav-links li { 
+        padding: 6px 10px !important; 
+        font-size: 0.75rem !important; 
+        border-radius: 4px !important;
+    }
+
+    /* Main Content: Stack everything vertically */
     .main-content { 
+        width: 100% !important;
         height: auto !important; 
         min-height: auto !important;
         padding: 15px !important; 
-        align-items: stretch !important; 
         display: flex !important; 
         flex-direction: column !important;
-        width: 100% !important;
         background-color: #0a1128 !important;
-        overflow: visible !important;
+        align-items: stretch !important;
     }
 
-     /* FORCE EACH PAGE TO TAKE UP THE FULL WIDTH OF THE SCREEN */
-    .main-content {
+    /* Make inner blocks full width */
+    .main-content > * {
         width: 100% !important;
-        min-width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
+        max-width: 100% !important;
+        margin: 0 0 15px 0 !important;
     }
 
     .hero-banner, .form-card, .about-section { 
@@ -212,6 +199,14 @@ body {
         border-radius: 12px !important;
     }
 
-    .about-grid { display: grid !important; grid-template-columns: 1fr !important; }
-    .academy-list { display: grid !important; grid-template-columns: 1fr !important; }
+    .about-grid { 
+        display: grid !important; 
+        grid-template-columns: 1fr !important; 
+        gap: 15px !important; 
+    }
+    .academy-list { 
+        display: grid !important; 
+        grid-template-columns: 1fr !important; 
+        gap: 15px !important; 
+    }
 }
