@@ -17,7 +17,7 @@ window.addEventListener('load', () => {
                 document.getElementById('orderForm').scrollIntoView({ 
                     behavior: 'smooth' 
                 });
-            }, 500);
+            }, 500); // Wait 0.5s
             
         }, 500); // Wait 0.5s for fade-out animation
     }, 3000); // 3000ms = 3 seconds
