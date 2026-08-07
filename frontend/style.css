@@ -47,11 +47,10 @@ body {
 /* Wrapper to handle sizing beautifully */
 .main-content > * {
     width: 100%;
-    max-width: 1500px;
-    padding: 0 40px; /* Default desktop padding */
-    margin: 0 auto;
+    max-width: 800px; /* Reduced from 1500px so it doesn't stretch too far */
+    padding: 0 20px;
+    margin: 0 auto;   /* Centers the content perfectly */
 }
-
 /* REMOVE padding EXCLUSIVELY for small mobile screens */
 @media (max-width: 480px) {
     .main-content > * {
