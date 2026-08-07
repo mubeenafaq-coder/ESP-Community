@@ -2,31 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ES&P Admin Dashboard</title>
-    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Admin specific tweaks to utilize the new responsive CSS */
-        .admin-layout { max-width: 1200px !important; margin: 0 auto; width: 100%; padding-bottom: 40px;}
-        .admin-layout h1 { margin-bottom: 30px; font-size: 2rem;}
-        .admin-card { background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 25px; }
-        .admin-card h2 { font-size: 1.3rem; margin-bottom: 15px; color: white; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
-        .pay-item { background: var(--bg-input); padding: 15px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
-        .btn-green { background: #2f855a; }
-        .btn-green:hover { background: #276749; }
-        #adminChat { height: 300px; overflow-y: auto; background: var(--bg-dark); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color);}
-        .chat-input { display: flex; gap: 10px; width: 100%; }
-        .chat-input input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: white; outline: none;}
-        .chat-input input:focus { border-color: var(--accent-red); }
-        
-        /* Responsive Admin */
-        @media (max-width: 768px) {
-            .admin-layout { padding: 10px; }
-            .pay-item { flex-direction: column; align-items: flex-start; }
-            .btn { width: 100%; margin-top: 5px; text-align: center;}
-            .chat-input { flex-direction: column; }
-        }
-    </style>
+    <!-- Font Awesome for Icons (Optional but recommended for a pro look) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- LOADING SCREEN FOR ADMIN -->
@@ -39,54 +19,97 @@
         </div>
     </div>
 
-    <!-- MAIN ADMIN CONTENT -->
-    <div id="main-site" style="display: none; width: 100%;">
-        <div class="admin-layout">
-            <h1>ES&P Admin Panel</h1>
-            
-            <div class="admin-card">
-                <h2>Pending Payments</h2>
-                <div id="paymentList">Loading...</div>
+    <!-- MAIN ADMIN LAYOUT -->
+    <div id="main-site" style="display: none; width: 100%; height: 100vh; display: flex;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="logo.png" alt="Logo">
+                <span>ES&P Admin</span>
             </div>
-
-            <div class="admin-card">
-                <h2>Live Chat with Student</h2>
-                <div id="adminChat"></div>
-                <div class="chat-input">
-                    <input type="text" id="adminMsg" placeholder="Reply to student...">
-                    <button class="btn btn-green" onclick="adminSendMessage()">Send</button>
+            <nav class="admin-nav">
+                <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-credit-card"></i> Payments</a>
+                <a href="#"><i class="fas fa-comments"></i> Chats</a>
+                <a href="#"><i class="fas fa-users"></i> Students</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            </nav>
+            <div class="admin-user">
+                <div class="user-avatar">AM</div>
+                <div>
+                    <strong>Admin</strong>
+                    <span style="color:var(--text-grey); font-size:0.8rem; display:block;">mubeenafaq-coder</span>
                 </div>
             </div>
-        </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h2>Dashboard Overview</h2>
+                <div class="header-date"><?php echo date("l, F j, Y"); ?></div>
+            </header>
+
+            <div class="admin-grid">
+                <!-- Payments Card -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Payments</h3>
+                        <span class="badge warning">Awaiting</span>
+                    </div>
+                    <div class="card-body" id="paymentList">
+                        <div class="placeholder-text">Loading payments...</div>
+                    </div>
+                </div>
+
+                <!-- Chat Card -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-comment-dots" style="color: #3b82f6;"></i> Live Student Chat</h3>
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="card-body chat-container" id="adminChat">
+                        <div class="placeholder-text">Waiting for messages...</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="adminMsg" placeholder="Type a reply to the student...">
+                        <button class="btn-primary" onclick="adminSendMessage()">Send <i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
+    <script src="script.js"></script>
     <script>
-        const API = 'http://localhost:3000';
-
-        // --- 3-SECOND LOADING SCREEN FOR ADMIN ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('main-site').style.display = 'block';
-                }, 500);
-            }, 3000);
-        });
+        // --- ADMIN JS OVERRIDE (To keep the dashboard running) ---
+        const API = 'http://localhost:3000'; // CHANGE TO YOUR LIVE VERCEl/RENDER URL IF HOSTING
 
         // Load Payments
         async function loadPayments() {
-            const res = await fetch(`${API}/api/admin/payments`);
-            const data = await res.json();
             const list = document.getElementById('paymentList');
-            if(data.length === 0) return list.innerHTML = '<p style="color:var(--text-grey);">No pending payments.</p>';
-            list.innerHTML = data.map(p => `
-                <div class="pay-item">
-                    <div><strong>${p.username}</strong> - Txn: ${p.transaction_id} (Rs. ${p.amount})</div>
-                    <button class="btn btn-green" onclick="verifyPayment(${p.id})">Verify Payment</button>
-                </div>
-            `).join('');
+            try {
+                const res = await fetch(`${API}/api/admin/payments`);
+                const data = await res.json();
+                if(data.length === 0) return list.innerHTML = '<div class="empty-state">No pending payments found.</div>';
+                list.innerHTML = data.map(p => `
+                    <div class="transaction-item">
+                        <div class="txn-info">
+                            <strong>${p.username}</strong>
+                            <span>Txn ID: ${p.transaction_id}</span>
+                        </div>
+                        <div class="txn-action">
+                            <span class="amount">Rs. ${p.amount}</span>
+                            <button class="btn-verify" onclick="verifyPayment(${p.id})">Verify</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div class="error-state">Could not connect to server.</div>';
+            }
         }
+
         async function verifyPayment(id) {
             await fetch(`${API}/api/admin/verify-payment`, {
                 method: 'POST', headers: {'Content-Type':'application/json'},
@@ -107,26 +130,28 @@
             input.value = '';
             loadAdminChat();
         }
+
         async function loadAdminChat() {
-            const res = await fetch(`${API}/api/get-messages/104`);
-            const msgs = await res.json();
             const div = document.getElementById('adminChat');
-            if(msgs.length === 0) {
-                div.innerHTML = '<p style="color:var(--text-grey); text-align:center;">No messages yet. Wait for a student to order.</p>';
-                return;
+            try {
+                const res = await fetch(`${API}/api/get-messages/104`);
+                const msgs = await res.json();
+                if(msgs.length === 0) {
+                    return div.innerHTML = '<div class="empty-state">No messages yet.</div>';
+                }
+                div.innerHTML = msgs.map(m => `
+                    <div class="chat-bubble ${m.is_admin ? 'admin-msg' : 'student-msg'}">
+                        <strong>${m.is_admin ? 'Admin' : 'Student'}:</strong>
+                        <span>${m.message}</span>
+                        ${m.file_url ? `<a href="${m.file_url}" target="_blank" style="color:#63b3ed; margin-left:5px;">📎</a>` : ''}
+                    </div>
+                `).join('');
+                div.scrollTop = div.scrollHeight;
+            } catch(e) {
+                div.innerHTML = '<div class="error-state">Server disconnected.</div>';
             }
-            div.innerHTML = msgs.map(m => `
-                <div style="text-align:${m.is_admin ? 'left' : 'right'}; margin-bottom: 12px;">
-                    <strong style="color:${m.is_admin ? 'var(--accent-red)' : 'white'};">
-                        ${m.is_admin ? 'Admin' : 'Student'}:
-                    </strong> 
-                    <span style="color:var(--text-white);">${m.message}</span>
-                    ${m.file_url ? `<br><a href="${m.file_url}" target="_blank" style="color:#63b3ed; text-decoration:underline;">📎 View Uploaded File</a>` : ''}
-                </div>
-            `).join('');
-            div.scrollTop = div.scrollHeight;
         }
-        setInterval(loadAdminChat, 3000);
+        setInterval(loadAdminChat, 5000); // Check every 5 seconds
         loadAdminChat();
     </script>
 </body>

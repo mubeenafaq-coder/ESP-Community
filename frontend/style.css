@@ -441,3 +441,170 @@ nav.top-nav .nav-links li.active {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.05); }
 }
+/* =========================================
+   PROFESSIONAL ADMIN DASHBOARD STYLES
+   ========================================= */
+.admin-sidebar {
+    width: 260px;
+    background-color: var(--bg-card);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    height: 100vh;
+    position: fixed;
+    left: 0; top: 0;
+    z-index: 100;
+}
+
+.admin-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    padding: 0 10px;
+}
+.admin-logo img { width: 35px; height: 35px; border-radius: 50%; }
+.admin-logo span { font-size: 1.2rem; font-weight: 700; color: white; }
+
+.admin-nav { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.admin-nav a {
+    color: var(--text-grey);
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.admin-nav a:hover, .admin-nav a.active {
+    background-color: rgba(212, 45, 45, 0.1);
+    color: var(--accent-red);
+}
+
+.admin-user {
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.user-avatar {
+    width: 40px; height: 40px;
+    background: var(--accent-red);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-weight: bold; color: white;
+}
+
+.admin-main {
+    margin-left: 260px;
+    padding: 30px;
+    width: calc(100% - 260px);
+    background-color: var(--bg-dark);
+    min-height: 100vh;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.admin-header h2 { margin: 0; font-size: 1.8rem; }
+.header-date { color: var(--text-grey); }
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+}
+
+.admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+.card-header h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px;}
+
+.badge.warning { background: #f59e0b; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; }
+.status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.card-body { min-height: 150px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.placeholder-text, .empty-state, .error-state { color: var(--text-grey); text-align: center; padding: 20px; }
+
+/* Transaction Items */
+.transaction-item {
+    background: var(--bg-input);
+    padding: 12px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.txn-info { display: flex; flex-direction: column; }
+.txn-info strong { color: white; font-size: 0.95rem; }
+.txn-info span { color: var(--text-grey); font-size: 0.8rem; }
+.txn-action { display: flex; align-items: center; gap: 15px; }
+.amount { font-weight: bold; color: white; }
+.btn-verify { background: #22c55e; color: white; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+.btn-verify:hover { background: #16a34a; }
+
+/* Chat Bubbles */
+.chat-container { display: flex; flex-direction: column; gap: 8px; height: 250px; }
+.chat-bubble {
+    padding: 10px 14px;
+    border-radius: 10px;
+    max-width: 80%;
+    font-size: 0.9rem;
+}
+.chat-bubble.student-msg { background: var(--bg-input); align-self: flex-start; border-left: 3px solid var(--accent-red); }
+.chat-bubble.admin-msg { background: rgba(212, 45, 45, 0.2); align-self: flex-end; border-right: 3px solid var(--accent-red); text-align: right; }
+.chat-bubble strong { display: block; font-size: 0.75rem; margin-bottom: 4px; opacity: 0.7; }
+
+.chat-input-area {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+.chat-input-area input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: white;
+    outline: none;
+}
+.btn-primary {
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-primary:hover { filter: brightness(1.1); }
+
+@media (max-width: 768px) {
+    .admin-sidebar { display: none; }
+    .admin-main { margin-left: 0; width: 100%; padding: 15px; }
+    .admin-grid { grid-template-columns: 1fr; }
+}
