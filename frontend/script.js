@@ -1,32 +1,5 @@
 const API_URL = 'https://esp-community-163v.vercel.app';
 
-// --- BULLETPROOF LOADING SCREEN ---
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        const mainSite = document.getElementById('main-site');
-        if(loader) loader.style.opacity = '0';
-        
-        setTimeout(() => {
-            if(loader) loader.style.display = 'none';
-            if(mainSite) mainSite.style.display = 'flex';
-            
-            // Try to load services, but DO NOT CRASH if it fails
-            try { loadServices(); } catch(e) { console.log("Service load skipped"); }
-            try { loadReviews(); } catch(e) { console.log("Review load skipped"); }
-            
-            // Smooth scroll
-            setTimeout(() => {
-                const form = document.getElementById('orderForm');
-                if(form) {
-                    form.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 500);
-            
-        }, 500);
-    }, 3000);
-});
-
 // --- NAVIGATION ---
 function showSection(sectionId) {
     document.querySelectorAll('.main-content').forEach(el => el.style.display = 'none');
