@@ -195,3 +195,36 @@ body {
         gap: 15px !important; 
     }
 }
+/* --- NUCLEAR OVERRIDE FOR DESKTOP --- */
+@media (min-width: 769px) {
+    /* Force the main area to take up all remaining space */
+    .main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important; /* Stops centering, stretches instead */
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Force all cards to stretch to the full width of the .main-content */
+    .main-content > *,
+    .hero-banner, 
+    .about-section, 
+    .form-card, 
+    #home {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important; /* Forces it to fill the space */
+        margin-right: auto !important;
+    }
+
+    /* Ensure the Home container fills the space */
+    #home {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+}
