@@ -47,7 +47,6 @@ body {
 /* Wrapper to handle sizing beautifully */
 .main-content > * {
     width: 100%;
-    max-width: 800px; /* Reduced from 1500px so it doesn't stretch too far */
     padding: 0 20px;
     margin: 0 auto;   /* Centers the content perfectly */
 }
