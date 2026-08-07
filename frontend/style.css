@@ -374,3 +374,70 @@ nav.top-nav .nav-links li.active {
         padding: 4px 8px;
     }
 }
+/* =========================================
+   LOADING SCREEN STYLES
+   ========================================= */
+#loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: #0a1128;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loader-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.loader-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #d42d2d;
+    padding: 5px;
+    animation: pulse-logo 1.5s infinite ease-in-out;
+}
+
+.loader-content h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: #ffffff;
+}
+
+.loader-content h1 span {
+    color: #d42d2d;
+}
+
+.loader-content p {
+    color: #a0aec0;
+    margin-top: 10px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #2d3748;
+    border-top: 4px solid #d42d2d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-logo {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
