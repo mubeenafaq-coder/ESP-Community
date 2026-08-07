@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ES&P Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome for Icons (Optional but recommended for a pro look) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -29,11 +28,11 @@
                 <span>ES&P Admin</span>
             </div>
             <nav class="admin-nav">
-                <a href="#" onclick="alert('Dashboard is already loaded')" class="active"><i class="fas fa-home"></i> Dashboard</a>
-                <a href="#" onclick="alert('Payments feature coming soon!')"><i class="fas fa-credit-card"></i> Payments</a>
-                <a href="#" onclick="alert('Chats feature coming soon!')"><i class="fas fa-comments"></i> Chats</a>
-                <a href="#" onclick="alert('Students feature coming soon!')"><i class="fas fa-users"></i> Students</a>
-                <a href="#" onclick="alert('Settings feature coming soon!')"><i class="fas fa-cog"></i> Settings</a>
+                <a href="javascript:void(0)" onclick="switchAdminView('dashboard')" class="active" id="nav-dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="javascript:void(0)" onclick="switchAdminView('payments')" id="nav-payments"><i class="fas fa-credit-card"></i> Payments</a>
+                <a href="javascript:void(0)" onclick="switchAdminView('chats')" id="nav-chats"><i class="fas fa-comments"></i> Chats</a>
+                <a href="javascript:void(0)" onclick="switchAdminView('students')" id="nav-students"><i class="fas fa-users"></i> Students</a>
+                <a href="javascript:void(0)" onclick="switchAdminView('settings')" id="nav-settings"><i class="fas fa-cog"></i> Settings</a>
             </nav>
             <div class="admin-user">
                 <div class="user-avatar">AM</div>
@@ -47,12 +46,12 @@
         <!-- Main Content Area -->
         <main class="admin-main">
             <header class="admin-header">
-                <h2>Dashboard Overview</h2>
+                <h2 id="page-title">Dashboard Overview</h2>
                 <div class="header-date"><?php echo date("l, F j, Y"); ?></div>
             </header>
 
-            <div class="admin-grid">
-                <!-- Payments Card -->
+            <!-- VIEW 1: DASHBOARD (Default) -->
+            <div id="dashboard-view" class="admin-grid">
                 <div class="admin-card">
                     <div class="card-header">
                         <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Payments</h3>
@@ -63,7 +62,6 @@
                     </div>
                 </div>
 
-                <!-- Chat Card -->
                 <div class="admin-card">
                     <div class="card-header">
                         <h3><i class="fas fa-comment-dots" style="color: #3b82f6;"></i> Live Student Chat</h3>
@@ -78,13 +76,86 @@
                     </div>
                 </div>
             </div>
+
+            <!-- VIEW 2: PAYMENTS (Full Width) -->
+            <div id="payments-view" class="admin-grid" style="display: none;">
+                <div class="admin-card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-credit-card" style="color: #22c55e;"></i> All Payment History</h3>
+                    </div>
+                    <div class="card-body" id="paymentHistoryList">
+                        <div class="placeholder-text">Payment history will appear here soon.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: CHATS (Full Width) -->
+            <div id="chats-view" class="admin-grid" style="display: none;">
+                <div class="admin-card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-comments" style="color: #3b82f6;"></i> All Student Conversations</h3>
+                    </div>
+                    <div class="card-body chat-container" id="fullChatList">
+                        <div class="placeholder-text">Full chat history coming soon.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: STUDENTS (Full Width) -->
+            <div id="students-view" class="admin-grid" style="display: none;">
+                <div class="admin-card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users" style="color: #8b5cf6;"></i> Registered Students</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="placeholder-text">Student database coming soon.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 5: SETTINGS (Full Width) -->
+            <div id="settings-view" class="admin-grid" style="display: none;">
+                <div class="admin-card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cog" style="color: #a0aec0;"></i> Admin Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="placeholder-text">Settings panel coming soon.</div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <script src="script.js"></script>
     <script>
-        // --- ADMIN JS OVERRIDE (To keep the dashboard running) ---
-        const API = 'http://localhost:3000'; // CHANGE TO YOUR LIVE VERCEl/RENDER URL IF HOSTING
+        // --- ADMIN JS OVERRIDE ---
+        const API = 'http://localhost:3000'; // CHANGE TO YOUR LIVE URL!
+
+        // --- TAB SWITCHING LOGIC ---
+        function switchAdminView(viewId) {
+            // Hide all views
+            document.querySelectorAll('.admin-grid').forEach(el => el.style.display = 'none');
+            // Show the selected view
+            const targetView = document.getElementById(viewId + '-view');
+            if(targetView) targetView.style.display = 'grid';
+            
+            // Update the title text
+            const titleMap = {
+                'dashboard': 'Dashboard Overview',
+                'payments': 'Payment History',
+                'chats': 'Student Conversations',
+                'students': 'Registered Students',
+                'settings': 'Admin Settings'
+            };
+            document.getElementById('page-title').innerText = titleMap[viewId];
+
+            // Update active class on sidebar
+            document.querySelectorAll('.admin-nav a').forEach(el => el.classList.remove('active'));
+            const activeLink = document.getElementById('nav-' + viewId);
+            if(activeLink) activeLink.classList.add('active');
+        }
 
         // Load Payments
         async function loadPayments() {
@@ -151,7 +222,7 @@
                 div.innerHTML = '<div class="error-state">Server disconnected.</div>';
             }
         }
-        setInterval(loadAdminChat, 5000); // Check every 5 seconds
+        setInterval(loadAdminChat, 5000);
         loadAdminChat();
     </script>
 </body>
