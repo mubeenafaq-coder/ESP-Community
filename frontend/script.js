@@ -1,5 +1,27 @@
 const API_URL = 'https://esp-community-163v.vercel.app';
 
+// --- LOADING SCREEN (Compatible with new layout) ---
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainSite = document.getElementById('main-site');
+        
+        if(loader) {
+            loader.style.opacity = '0'; // Fade out
+            setTimeout(() => {
+                loader.style.display = 'none';
+                if(mainSite) {
+                    mainSite.style.display = 'block'; // Show main site
+                } else {
+                    console.warn("main-site not found!");
+                }
+            }, 400);
+        } else {
+            console.warn("Loader not found!");
+        }
+    }, 3000);
+});
+
 // --- NAVIGATION ---
 function showSection(sectionId) {
     document.querySelectorAll('.main-content').forEach(el => el.style.display = 'none');
