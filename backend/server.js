@@ -156,6 +156,34 @@ app.get('/api/reviews', (req, res) => {
         res.json(results);
     });
 });
+// 12. Admin: Get All Students and their active assignments
+app.get('/api/admin/get-all-students', (req, res) => {
+    const sql = `
+        SELECT u.id, u.username, a.id as assignment_id 
+        FROM users u
+        LEFT JOIN assignments a ON u.id = a.student_id
+        WHERE u.role = 'student'
+        ORDER BY u.id DESC
+    `;
+    db.query(sql, (err, results) => {
+        if(err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+// 13. Admin: Get ALL messages (No specific assignment ID needed)
+app.get('/api/admin/get-all-messages', (req, res) => {
+    const sql = `
+        SELECT cm.*, u.username 
+        FROM chat_messages cm
+        JOIN users u ON cm.sender_id = u.id
+        ORDER BY cm.created_at ASC
+    `;
+    db.query(sql, (err, results) => {
+        if(err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
